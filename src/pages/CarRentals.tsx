@@ -4,6 +4,7 @@ import { ArrowLeft, Phone, Shield, Calendar, Info } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import WhatsAppButton from '../components/WhatsAppButton';
+import { supabase } from '../lib/supabase';
 
 const CarRentals = () => {
   const navigate = useNavigate();
@@ -71,17 +72,38 @@ const CarRentals = () => {
     }
   ];
 
-  const handleBooking = (car: any) => {
-    localStorage.setItem('selectedTour', JSON.stringify({
-      title: `Car Rental Booking: ${car.name}`,
-      type: 'car_rental',
-      vehicle: car.name,
-      price: car.price
-    }));
-    toast.success('Please fill out the contact form to complete your booking');
-    setTimeout(() => {
-      navigate('/contact');
-    }, 2000);
+  const handleBooking = async (car: any) => {
+    try {
+      // Get current user using the current Supabase API
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      const { error } = await supabase
+        .from('bookings')
+        .insert([{
+          user_id: user?.id,
+          vehicle: car.name,
+          price: car.price.replace('/day', ''),
+          created_at: new Date().toISOString(),
+          status: 'pending'
+        }]);
+
+      if (error) throw error;
+
+      localStorage.setItem('selectedTour', JSON.stringify({
+        title: `Car Rental Booking: ${car.name}`,
+        type: 'car_rental',
+        vehicle: car.name,
+        price: car.price
+      }));
+
+      toast.success('Booking initiated! Please complete the contact form');
+      setTimeout(() => {
+        navigate('/contact');
+      }, 2000);
+    } catch (err) {
+      toast.error('Booking failed. Please try again');
+      console.error('Supabase error:', err);
+    }
   };
 
   return (

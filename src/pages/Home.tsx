@@ -120,14 +120,9 @@ const experts = [
     image: "",
     description: "Spearheading research and development initiatives."
   },
-  {
-    name: "Laksh",
-    role: "IT Consultant",
-    image: "",
-    description: "Leading technological innovation and digital transformation."
-  }
 ];
 
+/*
 const associates = [
   {
     name: "Sarah Singh",
@@ -150,6 +145,7 @@ const associates = [
     image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80"
   }
 ];
+*/
 
 const Home = () => {
   const navigate = useNavigate();
@@ -263,6 +259,7 @@ const Home = () => {
       </ParallaxSection>
 
       {/* Associates Section */}
+      {/*
       <ParallaxSection className="py-16 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4">
           <AnimatedText
@@ -296,6 +293,7 @@ const Home = () => {
           </motion.div>
         </div>
       </ParallaxSection>
+      */}
 
       {/* Call to Action */}
       <section className="relative overflow-hidden">

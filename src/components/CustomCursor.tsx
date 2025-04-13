@@ -4,12 +4,25 @@ import { motion } from 'framer-motion';
 const CustomCursor = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isPointer, setIsPointer] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    
+    // Set initial position to center of screen
+    if (typeof window !== 'undefined') {
+      setMousePosition({
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2
+      });
+    }
+    
     // Check if device is mobile
     const checkMobile = () => {
-      setIsMobile(window.matchMedia('(max-width: 768px)').matches);
+      const isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
+      const hasTouch = navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
+      setIsMobile(isSmallScreen && hasTouch);
     };
 
     checkMobile();
@@ -32,7 +45,7 @@ const CustomCursor = () => {
     };
   }, [isMobile]);
 
-  if (isMobile) return null;
+  if (!mounted || isMobile) return null;
 
   return (
     <>

@@ -8,10 +8,17 @@ interface ThemeStore {
   toggleTheme: () => void;
 }
 
+const getInitialTheme = (): Theme => {
+  if (typeof window !== 'undefined') {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  return 'light';
+};
+
 export const useThemeStore = create<ThemeStore>()(
   persist(
     (set) => ({
-      theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+      theme: getInitialTheme(),
       toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
     }),
     {
